@@ -1263,10 +1263,24 @@ export default function App() {
   const [profile, setProfile] = useState(seedProfile);
   const [profileOpen, setProfileOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    const storedTheme = window.localStorage.getItem("eval-builder-theme");
+    if (storedTheme) return storedTheme === "dark";
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
   const [traces, setTraces] = useState(seedTraces);
   const [taxonomy, setTaxonomy] = useState(seedTaxonomy);
   const [evals, setEvals] = useState(seedEvals);
   const [draft, setDraft] = useState({ ...makeEmptyDraft(seedProfile), __resetKey: 0 });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("eval-builder-theme", darkMode ? "dark" : "light");
+    }
+  }, [darkMode]);
 
   const resetDraft = () =>
     setDraft((prev) => ({ ...makeEmptyDraft(profile), __resetKey: prev.__resetKey + 1 }));
@@ -1295,12 +1309,15 @@ export default function App() {
   ];
 
   return (
-    <div className="eb-app">
+    <div className={`eb-app ${darkMode ? "eb-app--dark" : "eb-app--light"}`}>
       <div className="eb-topbar">
         <div className="eb-wordmark eb-serif">
           Eval<span>Builder</span>
         </div>
         <div className="eb-row">
+          <button className="eb-profile-btn" onClick={() => setDarkMode((value) => !value)}>
+            Theme: {darkMode ? "Dark" : "Light"}
+          </button>
           <button className="eb-profile-btn" onClick={() => setHelpOpen(true)}>
             Guide
           </button>

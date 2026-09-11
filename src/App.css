@@ -10,6 +10,11 @@
   --fail: #8c1409;
   --fail-soft: #F6DEDA;
   --hairline: #D3D0C4;
+  --panel-contrast: #FFFFFF;
+  --button-hover: #2a45b0;
+  --button-text: #FFFFFF;
+  --modal-overlay: rgba(31, 36, 33, 0.45);
+  color-scheme: light dark;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color: var(--ink);
   background: var(--paper);
@@ -20,6 +25,62 @@
 
 .eb-app * {
   box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  .eb-app:not(.eb-app--light):not(.eb-app--dark) {
+    --paper: #121617;
+    --raised: #1a1f1f;
+    --ink: #edf1ef;
+    --ink-soft: #b4bbb7;
+    --accent: #8fb0ff;
+    --accent-soft: #223e75;
+    --success: #7ad7af;
+    --success-soft: #1d3b32;
+    --fail: #ff9a8c;
+    --fail-soft: #4c241f;
+    --hairline: #313a39;
+    --panel-contrast: #1d2323;
+    --button-hover: #6a8ef0;
+    --button-text: #f4f7ff;
+    --modal-overlay: rgba(6, 8, 8, 0.72);
+  }
+}
+
+.eb-app--dark {
+  --paper: #121617;
+  --raised: #1a1f1f;
+  --ink: #edf1ef;
+  --ink-soft: #b4bbb7;
+  --accent: #8fb0ff;
+  --accent-soft: #223e75;
+  --success: #7ad7af;
+  --success-soft: #1d3b32;
+  --fail: #ff9a8c;
+  --fail-soft: #4c241f;
+  --hairline: #313a39;
+  --panel-contrast: #1d2323;
+  --button-hover: #6a8ef0;
+  --button-text: #f4f7ff;
+  --modal-overlay: rgba(6, 8, 8, 0.72);
+}
+
+.eb-app--light {
+  --paper: #EEF0EA;
+  --raised: #F8F9F4;
+  --ink: #1F2421;
+  --ink-soft: #5B6058;
+  --accent: #3457D5;
+  --accent-soft: #DCE3FA;
+  --success: #2F7D5C;
+  --success-soft: #DCEEE4;
+  --fail: #8c1409;
+  --fail-soft: #F6DEDA;
+  --hairline: #D3D0C4;
+  --panel-contrast: #FFFFFF;
+  --button-hover: #2a45b0;
+  --button-text: #FFFFFF;
+  --modal-overlay: rgba(31, 36, 33, 0.45);
 }
 
 .eb-serif {
@@ -92,7 +153,7 @@
   font-family: inherit;
   font-size: 13px;
   color: var(--ink);
-  background: #fff;
+  background: var(--panel-contrast);
   border: 1px solid var(--hairline);
   padding: 8px 10px;
 }
@@ -215,7 +276,7 @@
   border-left: 2px solid var(--accent-soft);
   padding: 8px 12px;
   margin: 6px 0;
-  background: #fff;
+  background: var(--panel-contrast);
 }
 
 .eb-span.model_response {
@@ -250,7 +311,7 @@
 
 .eb-chip {
   border: 1px solid var(--hairline);
-  background: #fff;
+  background: var(--panel-contrast);
   padding: 3px 9px;
   font-size: 11px;
   display: inline-flex;
@@ -272,17 +333,13 @@
   font-size: 12px;
   padding: 0;
   line-height: 1;
-   padding: 6px 12px;
-  font-size: 14px;
-  border-radius: 8px;
 }
 
 .eb-btn {
   background: var(--accent);
-  color: #fff;
+  color: var(--button-text);
   border: none;
-   padding: 6px 12px;
-  font-size: 14px;
+  padding: 6px 12px;
   border-radius: 8px;
   font-family: inherit;
   font-size: 14px;
@@ -291,7 +348,7 @@
 }
 
 .eb-btn:hover {
-  background: #2a45b0;
+  background: var(--button-hover);
 }
 
 .eb-btn:disabled {
@@ -393,7 +450,7 @@
 .eb-type-card {
   flex: 1;
   border: 1px solid var(--hairline);
-  background: #fff;
+  background: var(--panel-contrast);
   padding: 14px;
   cursor: pointer;
   text-align: left;
@@ -430,7 +487,7 @@
 
 .eb-check-btn {
   border: 1px solid var(--hairline);
-  background: #fff;
+  background: var(--panel-contrast);
   padding: 10px;
   text-align: left;
   cursor: pointer;
@@ -527,7 +584,7 @@
 }
 
 .eb-bar-track {
-  background: #fff;
+  background: var(--panel-contrast);
   border: 1px solid var(--hairline);
   height: 10px;
   width: 100%;
@@ -589,7 +646,7 @@
   height: 15px;
   border-radius: 50%;
   border: 1px solid var(--hairline);
-  background: #fff;
+  background: var(--panel-contrast);
   color: var(--ink-soft);
   font-size: 12px;
   line-height: 1;
@@ -632,7 +689,7 @@
 .eb-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(31, 36, 33, 0.45);
+  background: var(--modal-overlay);
   display: flex;
   align-items: flex-start;
   justify-content: center;
