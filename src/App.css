@@ -60,7 +60,7 @@
   --fail-soft: #4c241f;
   --hairline: #313a39;
   --panel-contrast: #1d2323;
-  --button-hover: #6a8ef0;
+  --button-hover: #4470ea;
   --button-text: #f4f7ff;
   --modal-overlay: rgba(6, 8, 8, 0.72);
 }
@@ -97,6 +97,18 @@
   justify-content: space-between;
   padding: 18px 24px;
   border-bottom: 1px solid var(--hairline);
+}
+
+.eb-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eb-brand-icon {
+  display: block;
+  height: 60px;
+  width: auto;
 }
 
 .eb-wordmark {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import iconPng from "./EvalBuilder-icon.png";
 
 // ---------- helpers ----------
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -1311,8 +1312,11 @@ export default function App() {
   return (
     <div className={`eb-app ${darkMode ? "eb-app--dark" : "eb-app--light"}`}>
       <div className="eb-topbar">
-        <div className="eb-wordmark eb-serif">
-          Eval<span>Builder</span>
+        <div className="eb-brand">
+          <img className="eb-brand-icon" src={iconPng} alt="Eval Builder Icon" />
+          <div className="eb-wordmark eb-serif">
+            Eval<span>Builder</span>
+          </div>
         </div>
         <div className="eb-row">
           <button className="eb-profile-btn" onClick={() => setDarkMode((value) => !value)}>
