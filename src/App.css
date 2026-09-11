@@ -236,6 +236,52 @@
   max-width: 920px;
 }
 
+.eb-project-card {
+  border: 1px solid var(--hairline);
+  background: var(--raised);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.eb-project-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.eb-project-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.eb-project-meta {
+  margin: 4px 0 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.eb-project-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.eb-project-editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.eb-project-editing .eb-input {
+  flex: 1;
+}
+
 .eb-section-title {
   font-size: 20px;
   margin: 0 0 4px 0;
@@ -376,6 +422,7 @@
   font-family: inherit;
   font-size: 12px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .eb-btn-outline:hover {

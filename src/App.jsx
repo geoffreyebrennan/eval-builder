@@ -309,6 +309,51 @@ const seedEvals = [
   },
 ];
 
+const STORAGE_KEY = "eval-builder-projects";
+const CURRENT_PROJECT_KEY = "eval-builder-current-project";
+
+const cloneProjectData = (value) => JSON.parse(JSON.stringify(value));
+
+const createProject = (name = "My Project") => ({
+  id: uid(),
+  name,
+  profile: cloneProjectData(seedProfile),
+  traces: cloneProjectData(seedTraces),
+  taxonomy: cloneProjectData(seedTaxonomy),
+  evals: cloneProjectData(seedEvals),
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+});
+
+const normalizeProject = (project, index) => ({
+  id: project.id || uid(),
+  name: project.name || `Project ${index + 1}`,
+  profile: project.profile || cloneProjectData(seedProfile),
+  traces: Array.isArray(project.traces) ? project.traces : cloneProjectData(seedTraces),
+  taxonomy: Array.isArray(project.taxonomy) ? project.taxonomy : cloneProjectData(seedTaxonomy),
+  evals: Array.isArray(project.evals) ? project.evals : cloneProjectData(seedEvals),
+  createdAt: project.createdAt || Date.now(),
+  updatedAt: project.updatedAt || Date.now(),
+});
+
+const loadProjects = () => {
+  if (typeof window === "undefined") return [createProject("My Project")];
+
+  try {
+    const savedProjects = window.localStorage.getItem(STORAGE_KEY);
+    if (!savedProjects) return [createProject("My Project")];
+
+    const parsedProjects = JSON.parse(savedProjects);
+    if (!Array.isArray(parsedProjects) || parsedProjects.length === 0) {
+      return [createProject("My Project")];
+    }
+
+    return parsedProjects.map(normalizeProject);
+  } catch {
+    return [createProject("My Project")];
+  }
+};
+
 // ---------- Product profile panel ----------
 function ProfilePanel({ profile, setProfile }) {
   return (
@@ -411,6 +456,120 @@ function HelpModal({ onClose }) {
           ))}
         </dl>
       </div>
+    </div>
+  );
+}
+
+// ---------- Projects tab ----------
+function ProjectsTab({
+  projects,
+  currentProjectId,
+  onCreateProject,
+  onOpenProject,
+  onRenameProject,
+  onDeleteProject,
+}) {
+  const [name, setName] = useState("");
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingName, setEditingName] = useState("");
+
+  const beginRename = (project) => {
+    setEditingProjectId(project.id);
+    setEditingName(project.name);
+  };
+
+  const cancelRename = () => {
+    setEditingProjectId(null);
+    setEditingName("");
+  };
+
+  const saveRename = (projectId) => {
+    const trimmed = editingName.trim();
+    if (!trimmed) return;
+
+    onRenameProject(projectId, trimmed);
+    cancelRename();
+  };
+
+  return (
+    <div>
+      <div className="eb-row-between">
+        <div>
+          <h2 className="eb-section-title eb-serif">Projects</h2>
+          <p className="eb-section-sub">
+            Create a project to gather traces, evals, and settings for a specific initiative.
+          </p>
+        </div>
+      </div>
+
+      <div className="eb-panel">
+        <label className="eb-field-label">Project name</label>
+        <div className="eb-row">
+          <input
+            className="eb-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Support Copilot quality review"
+          />
+          <button
+            className="eb-btn"
+            onClick={() => {
+              const trimmed = name.trim();
+              if (!trimmed) return;
+              onCreateProject(trimmed);
+              setName("");
+            }}
+          >
+            Create project
+          </button>
+        </div>
+      </div>
+
+      {projects.map((project) => (
+        <div
+          className={`eb-project-card ${project.id === currentProjectId ? "selected" : ""}`}
+          key={project.id}
+        >
+          {editingProjectId === project.id ? (
+            <div className="eb-project-editing">
+              <input
+                className="eb-input"
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                autoFocus
+              />
+              <div className="eb-project-actions">
+                <button className="eb-btn eb-btn-sm" onClick={() => saveRename(project.id)}>
+                  Save
+                </button>
+                <button className="eb-btn-outline eb-btn-sm" onClick={cancelRename}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div>
+                <p className="eb-project-name">{project.name}</p>
+                <p className="eb-project-meta">
+                  {project.traces.length} traces • {project.evals.length} evals • updated {new Date(project.updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="eb-project-actions">
+                <button className="eb-btn-outline eb-btn-sm" onClick={() => onOpenProject(project.id)}>
+                  {project.id === currentProjectId ? "Current project" : "Open"}
+                </button>
+                <button className="eb-btn-outline eb-btn-sm" onClick={() => beginRename(project)}>
+                  Rename
+                </button>
+                <button className="eb-btn-outline eb-btn-sm" onClick={() => onDeleteProject(project.id)}>
+                  Delete
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
@@ -1260,8 +1419,7 @@ function LibraryTab({ evals, traces }) {
 
 // ---------- App ----------
 export default function App() {
-  const [activeTab, setActiveTab] = useState("traces");
-  const [profile, setProfile] = useState(seedProfile);
+  const [activeTab, setActiveTab] = useState("projects");
   const [profileOpen, setProfileOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
@@ -1272,16 +1430,80 @@ export default function App() {
 
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
-  const [traces, setTraces] = useState(seedTraces);
-  const [taxonomy, setTaxonomy] = useState(seedTaxonomy);
-  const [evals, setEvals] = useState(seedEvals);
-  const [draft, setDraft] = useState({ ...makeEmptyDraft(seedProfile), __resetKey: 0 });
+  const [projects, setProjects] = useState(() => loadProjects());
+  const [currentProjectId, setCurrentProjectId] = useState(() => {
+    if (typeof window === "undefined") {
+      return loadProjects()[0].id;
+    }
+
+    const loadedProjects = loadProjects();
+    const savedProjectId = window.localStorage.getItem(CURRENT_PROJECT_KEY);
+
+    return savedProjectId && loadedProjects.some((project) => project.id === savedProjectId)
+      ? savedProjectId
+      : loadedProjects[0].id;
+  });
+  const [draft, setDraft] = useState(() => ({
+    ...makeEmptyDraft(loadProjects()[0].profile),
+    __resetKey: 0,
+  }));
+
+  const currentProject =
+    projects.find((project) => project.id === currentProjectId) ?? projects[0];
+
+  const profile = currentProject.profile;
+  const traces = currentProject.traces;
+  const taxonomy = currentProject.taxonomy;
+  const evals = currentProject.evals;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(CURRENT_PROJECT_KEY, currentProjectId);
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+    }
+  }, [currentProjectId, projects]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.localStorage.setItem("eval-builder-theme", darkMode ? "dark" : "light");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    setDraft({ ...makeEmptyDraft(profile), __resetKey: 0 });
+  }, [currentProjectId]);
+
+  const updateCurrentProject = (updater) => {
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === currentProjectId
+          ? { ...project, ...updater(project), updatedAt: Date.now() }
+          : project
+      )
+    );
+  };
+
+  const setProfile = (nextProfile) => {
+    updateCurrentProject((project) => ({ profile: nextProfile }));
+  };
+
+  const setTraces = (updater) => {
+    updateCurrentProject((project) => ({
+      traces: typeof updater === "function" ? updater(project.traces) : updater,
+    }));
+  };
+
+  const setTaxonomy = (updater) => {
+    updateCurrentProject((project) => ({
+      taxonomy: typeof updater === "function" ? updater(project.taxonomy) : updater,
+    }));
+  };
+
+  const setEvals = (updater) => {
+    updateCurrentProject((project) => ({
+      evals: typeof updater === "function" ? updater(project.evals) : updater,
+    }));
+  };
 
   const resetDraft = () =>
     setDraft((prev) => ({ ...makeEmptyDraft(profile), __resetKey: prev.__resetKey + 1 }));
@@ -1303,10 +1525,62 @@ export default function App() {
     setActiveTab("library");
   };
 
+  const onCreateProject = (projectName) => {
+    const newProject = createProject(projectName.trim() || "My Project");
+    setProjects((prev) => [...prev, newProject]);
+    setCurrentProjectId(newProject.id);
+    setActiveTab("projects");
+  };
+
+  const onOpenProject = (projectId) => {
+    setCurrentProjectId(projectId);
+  };
+
+  const onRenameProject = (projectId, nextName) => {
+    const project = projects.find((item) => item.id === projectId);
+    if (!project) return;
+
+    const trimmed = nextName.trim();
+    if (!trimmed || trimmed === project.name) return;
+
+    setProjects((prev) =>
+      prev.map((item) =>
+        item.id === projectId ? { ...item, name: trimmed, updatedAt: Date.now() } : item
+      )
+    );
+  };
+
+  const onDeleteProject = (projectId) => {
+    const project = projects.find((item) => item.id === projectId);
+    if (!project) return;
+
+    const confirmed = typeof window !== "undefined"
+      ? window.confirm(`Delete "${project.name}"? This project and all of its traces, evals, and settings will be removed.`)
+      : true;
+
+    if (!confirmed) return;
+
+    const remainingProjects = projects.filter((item) => item.id !== projectId);
+
+    if (remainingProjects.length === 0) {
+      const replacementProject = createProject("My Project");
+      setProjects([replacementProject]);
+      setCurrentProjectId(replacementProject.id);
+      return;
+    }
+
+    setProjects(remainingProjects);
+
+    if (projectId === currentProjectId) {
+      setCurrentProjectId(remainingProjects[0].id);
+    }
+  };
+
   const navItems = [
-    { key: "traces", num: 1, label: "Traces" },
-    { key: "build", num: 2, label: "Build eval" },
-    { key: "library", num: 3, label: "Library" },
+    { key: "projects", num: 1, label: "Projects" },
+    { key: "traces", num: 2, label: "Traces" },
+    { key: "build", num: 3, label: "Build eval" },
+    { key: "library", num: 4, label: "Library" },
   ];
 
   return (
@@ -1349,6 +1623,16 @@ export default function App() {
         </div>
 
         <div className="eb-main">
+          {activeTab === "projects" && (
+            <ProjectsTab
+              projects={projects}
+              currentProjectId={currentProjectId}
+              onCreateProject={onCreateProject}
+              onOpenProject={onOpenProject}
+              onRenameProject={onRenameProject}
+              onDeleteProject={onDeleteProject}
+            />
+          )}
           {activeTab === "traces" && (
             <TracesTab
               traces={traces}
