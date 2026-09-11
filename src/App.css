@@ -1,0 +1,721 @@
+.eb-app {
+  --paper: #EEF0EA;
+  --raised: #F8F9F4;
+  --ink: #1F2421;
+  --ink-soft: #5B6058;
+  --accent: #3457D5;
+  --accent-soft: #DCE3FA;
+  --success: #2F7D5C;
+  --success-soft: #DCEEE4;
+  --fail: #B23A2E;
+  --fail-soft: #F6DEDA;
+  --hairline: #D3D0C4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--ink);
+  background: var(--paper);
+  min-height: 100%;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.eb-app * {
+  box-sizing: border-box;
+}
+
+.eb-serif {
+  font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+}
+
+.eb-heading-reset {
+  margin: 0;
+}
+
+.eb-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.eb-wordmark {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.eb-wordmark span {
+  color: var(--accent);
+}
+
+.eb-profile-btn {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  padding: 7px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.eb-profile-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.eb-profile-panel {
+  border-bottom: 1px solid var(--hairline);
+  background: var(--raised);
+  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.eb-field-label {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.eb-field-label--compact {
+  margin-bottom: 0;
+}
+
+.eb-input,
+.eb-textarea,
+.eb-select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--hairline);
+  padding: 8px 10px;
+}
+
+.eb-textarea {
+  resize: vertical;
+  min-height: 56px;
+}
+
+.eb-input:focus,
+.eb-textarea:focus,
+.eb-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.eb-layout {
+  display: flex;
+  min-height: calc(100vh - 60px);
+}
+
+.eb-rail {
+  width: 190px;
+  border-right: 1px solid var(--hairline);
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+
+.eb-nav-item {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  padding: 11px 20px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.eb-nav-item:hover {
+  color: var(--ink);
+}
+
+.eb-nav-item.active {
+  border-left-color: var(--accent);
+  color: var(--ink);
+  background: var(--raised);
+  font-weight: 600;
+}
+
+.eb-nav-num {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.eb-nav-item.active .eb-nav-num {
+  color: var(--accent);
+}
+
+.eb-main {
+  flex: 1;
+  padding: 28px 32px;
+  max-width: 920px;
+}
+
+.eb-section-title {
+  font-size: 20px;
+  margin: 0 0 4px 0;
+}
+
+.eb-section-sub {
+  color: var(--ink-soft);
+  margin: 0 0 22px 0;
+  font-size: 13px;
+}
+
+.eb-panel {
+  border: 1px solid var(--hairline);
+  background: var(--raised);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.eb-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.eb-trace-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+
+.eb-trace-meta {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.eb-trace-meta--align-center {
+  align-self: center;
+  margin-right: 4px;
+}
+
+.eb-quote {
+  border-left: 2px solid var(--hairline);
+  padding-left: 10px;
+  margin: 10px 0;
+  color: var(--ink);
+}
+
+.eb-span {
+  border-left: 2px solid var(--accent-soft);
+  padding: 8px 12px;
+  margin: 6px 0;
+  background: #fff;
+}
+
+.eb-span.model_response {
+  border-left-color: var(--accent);
+}
+
+.eb-span-kind {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 3px;
+  letter-spacing: 0.03em;
+}
+
+.eb-span-kind.model_response {
+  color: var(--ink);
+}
+
+.eb-span-io {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-top: 2px;
+  word-break: break-word;
+}
+
+.eb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.eb-chip {
+  border: 1px solid var(--hairline);
+  background: #fff;
+  padding: 3px 9px;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.eb-chip.tagged {
+  background: var(--fail-soft);
+  border-color: var(--fail);
+  color: var(--fail);
+}
+
+.eb-chip button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 12px;
+  padding: 0;
+  line-height: 1;
+}
+
+.eb-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.eb-btn:hover {
+  background: #2a45b0;
+}
+
+.eb-btn:disabled {
+  background: var(--hairline);
+  cursor: not-allowed;
+}
+
+.eb-btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.eb-btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.eb-btn-sm {
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.eb-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.eb-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eb-add-tag {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.eb-add-tag select,
+.eb-add-tag input {
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+.eb-divider {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 22px 0;
+}
+
+.eb-step-track {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+}
+
+.eb-step-dot {
+  flex: 1;
+  height: 3px;
+  background: var(--hairline);
+}
+
+.eb-step-dot.done {
+  background: var(--accent);
+}
+
+.eb-step-dot.current {
+  background: var(--ink);
+}
+
+.eb-wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.eb-criterion-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.eb-type-options {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.eb-type-card {
+  flex: 1;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  padding: 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.eb-type-card:hover {
+  border-color: var(--accent);
+}
+
+.eb-type-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.eb-type-card h4 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+}
+
+.eb-type-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.eb-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.eb-check-btn {
+  border: 1px solid var(--hairline);
+  background: #fff;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.eb-check-btn.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.eb-intent-list label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.eb-summary-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.eb-summary-label {
+  width: 90px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+  font-size: 11px;
+  padding-top: 2px;
+}
+
+.eb-summary-value {
+  flex: 1;
+  font-size: 13px;
+}
+
+.eb-eval-card {
+  border: 1px solid var(--hairline);
+  background: var(--raised);
+  margin-bottom: 12px;
+}
+
+.eb-eval-head {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.eb-eval-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.eb-badge {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  border: 1px solid var(--hairline);
+  color: var(--ink-soft);
+}
+
+.eb-badge.code {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.eb-badge.judge {
+  border-color: var(--ink-soft);
+}
+
+.eb-eval-body {
+  padding: 0 18px 18px 18px;
+  border-top: 1px solid var(--hairline);
+}
+
+.eb-rubric-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12px;
+}
+
+.eb-rubric-score {
+  width: 26px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.eb-bar-track {
+  background: #fff;
+  border: 1px solid var(--hairline);
+  height: 10px;
+  width: 100%;
+  margin: 6px 0 14px 0;
+}
+
+.eb-bar-fill {
+  background: var(--success);
+  height: 100%;
+  width: var(--bar-width, 0%);
+}
+
+.eb-result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12px;
+}
+
+.eb-pass {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.eb-fail-text {
+  color: var(--fail);
+  font-weight: 700;
+}
+
+.eb-empty {
+  color: var(--ink-soft);
+  font-size: 13px;
+  padding: 30px 0;
+  text-align: center;
+  border: 1px dashed var(--hairline);
+}
+
+.eb-textlink {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.eb-field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.eb-hint-btn {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.eb-hint-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.eb-hint-bubble {
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  margin: -2px 0 10px 0;
+}
+
+.eb-help-note {
+  background: var(--raised);
+  border: 1px dashed var(--hairline);
+  border-left: 2px solid var(--accent);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+
+.eb-help-note strong {
+  color: var(--ink);
+}
+
+.eb-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 36, 33, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px;
+  z-index: 50;
+}
+
+.eb-modal {
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  max-width: 560px;
+  width: 100%;
+  max-height: 78vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.eb-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.eb-modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+
+.eb-modal-close:hover {
+  color: var(--ink);
+}
+
+.eb-glossary-term {
+  border-bottom: 1px solid var(--hairline);
+  padding: 12px 0;
+}
+
+.eb-glossary-term:last-child {
+  border-bottom: none;
+}
+
+.eb-glossary-term dt {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.eb-glossary-term dd {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.eb-export-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.eb-eval-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.eb-field-scope {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.eb-mb-10 { margin-bottom: 10px; }
+.eb-mb-12 { margin-bottom: 12px; }
+.eb-mb-14 { margin-bottom: 14px; }
+.eb-mt-6 { margin-top: 6px; }
+.eb-mt-8 { margin-top: 8px; }
+.eb-mt-12 { margin-top: 12px; }
+.eb-mt-14 { margin-top: 14px; }
+.eb-mr-4 { margin-right: 4px; }
+.eb-max-160 { max-width: 160px; }
+.eb-max-60 { max-width: 60px; }
+.eb-max-140 { max-width: 140px; }
+.eb-pass-rate {
+  font-weight: 700;
+}
+.eb-section-sub-tight {
+  margin-bottom: 14px;
+}

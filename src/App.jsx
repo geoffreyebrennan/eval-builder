@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./App.css";
 
 // ---------- helpers ----------
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -307,176 +308,6 @@ const seedEvals = [
   },
 ];
 
-// ---------- styles ----------
-const styles = `
-.eb-app {
-  --paper: #EEF0EA;
-  --raised: #F8F9F4;
-  --ink: #1F2421;
-  --ink-soft: #5B6058;
-  --accent: #3457D5;
-  --accent-soft: #DCE3FA;
-  --success: #2F7D5C;
-  --success-soft: #DCEEE4;
-  --fail: #B23A2E;
-  --fail-soft: #F6DEDA;
-  --hairline: #D3D0C4;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color: var(--ink);
-  background: var(--paper);
-  min-height: 100%;
-  font-size: 13px;
-  line-height: 1.5;
-}
-.eb-app * { box-sizing: border-box; }
-.eb-serif { font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif; }
-.eb-topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 24px; border-bottom: 1px solid var(--hairline);
-}
-.eb-wordmark { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-.eb-wordmark span { color: var(--accent); }
-.eb-profile-btn {
-  background: transparent; border: 1px solid var(--hairline); color: var(--ink);
-  padding: 7px 12px; cursor: pointer; font-family: inherit; font-size: 12px;
-}
-.eb-profile-btn:hover { border-color: var(--accent); color: var(--accent); }
-.eb-profile-panel {
-  border-bottom: 1px solid var(--hairline); background: var(--raised);
-  padding: 18px 24px; display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 14px;
-}
-.eb-field-label { display: block; font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; }
-.eb-input, .eb-textarea, .eb-select {
-  width: 100%; font-family: inherit; font-size: 13px; color: var(--ink);
-  background: #fff; border: 1px solid var(--hairline); padding: 8px 10px;
-}
-.eb-textarea { resize: vertical; min-height: 56px; }
-.eb-input:focus, .eb-textarea:focus, .eb-select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-.eb-layout { display: flex; min-height: calc(100vh - 60px); }
-.eb-rail { width: 190px; border-right: 1px solid var(--hairline); padding: 20px 0; flex-shrink: 0; }
-.eb-nav-item {
-  display: flex; gap: 10px; align-items: baseline; width: 100%; text-align: left;
-  background: transparent; border: none; border-left: 3px solid transparent;
-  padding: 11px 20px; cursor: pointer; color: var(--ink-soft); font-family: inherit; font-size: 13px;
-}
-.eb-nav-item:hover { color: var(--ink); }
-.eb-nav-item.active { border-left-color: var(--accent); color: var(--ink); background: var(--raised); font-weight: 600; }
-.eb-nav-num { color: var(--ink-soft); font-size: 12px; }
-.eb-nav-item.active .eb-nav-num { color: var(--accent); }
-.eb-main { flex: 1; padding: 28px 32px; max-width: 920px; }
-.eb-section-title { font-size: 20px; margin: 0 0 4px 0; }
-.eb-section-sub { color: var(--ink-soft); margin: 0 0 22px 0; font-size: 13px; }
-.eb-panel { border: 1px solid var(--hairline); background: var(--raised); padding: 18px; margin-bottom: 16px; }
-.eb-panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.eb-trace-title { font-weight: 700; font-size: 14px; margin: 0 0 4px 0; }
-.eb-trace-meta { color: var(--ink-soft); font-size: 11px; }
-.eb-quote { border-left: 2px solid var(--hairline); padding-left: 10px; margin: 10px 0; color: var(--ink); }
-.eb-span { border-left: 2px solid var(--accent-soft); padding: 8px 12px; margin: 6px 0; background: #fff; }
-.eb-span.model_response { border-left-color: var(--accent); }
-.eb-span-kind { font-size: 10px; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; letter-spacing: 0.03em; }
-.eb-span-kind.model_response { color: var(--ink); }
-.eb-span-io { color: var(--ink-soft); font-size: 12px; margin-top: 2px; word-break: break-word; }
-.eb-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.eb-chip {
-  border: 1px solid var(--hairline); background: #fff; padding: 3px 9px; font-size: 11px;
-  display: inline-flex; align-items: center; gap: 6px;
-}
-.eb-chip.tagged { background: var(--fail-soft); border-color: var(--fail); color: var(--fail); }
-.eb-chip button { background: none; border: none; cursor: pointer; color: inherit; font-size: 12px; padding: 0; line-height: 1; }
-.eb-btn {
-  background: var(--accent); color: #fff; border: none; padding: 9px 16px;
-  font-family: inherit; font-size: 12px; cursor: pointer; font-weight: 600;
-}
-.eb-btn:hover { background: #2a45b0; }
-.eb-btn:disabled { background: var(--hairline); cursor: not-allowed; }
-.eb-btn-outline {
-  background: transparent; color: var(--ink); border: 1px solid var(--hairline);
-  padding: 9px 16px; font-family: inherit; font-size: 12px; cursor: pointer;
-}
-.eb-btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-.eb-btn-sm { padding: 5px 10px; font-size: 11px; }
-.eb-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.eb-row-between { display: flex; justify-content: space-between; align-items: center; }
-.eb-add-tag { display: flex; gap: 6px; margin-top: 10px; }
-.eb-add-tag select, .eb-add-tag input { font-size: 11px; padding: 5px 8px; }
-.eb-divider { border: none; border-top: 1px solid var(--hairline); margin: 22px 0; }
-.eb-step-track { display: flex; gap: 4px; margin-bottom: 22px; }
-.eb-step-dot { flex: 1; height: 3px; background: var(--hairline); }
-.eb-step-dot.done { background: var(--accent); }
-.eb-step-dot.current { background: var(--ink); }
-.eb-wizard-nav { display: flex; justify-content: space-between; margin-top: 24px; }
-.eb-criterion-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
-.eb-type-options { display: flex; gap: 12px; margin: 14px 0; }
-.eb-type-card {
-  flex: 1; border: 1px solid var(--hairline); background: #fff; padding: 14px;
-  cursor: pointer; text-align: left; font-family: inherit;
-}
-.eb-type-card:hover { border-color: var(--accent); }
-.eb-type-card.selected { border-color: var(--accent); background: var(--accent-soft); }
-.eb-type-card h4 { margin: 0 0 6px 0; font-size: 13px; }
-.eb-type-card p { margin: 0; color: var(--ink-soft); font-size: 11px; line-height: 1.5; }
-.eb-check-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
-.eb-check-btn {
-  border: 1px solid var(--hairline); background: #fff; padding: 10px; text-align: left;
-  cursor: pointer; font-family: inherit; font-size: 12px;
-}
-.eb-check-btn.selected { border-color: var(--accent); background: var(--accent-soft); }
-.eb-intent-list label { display: flex; gap: 8px; align-items: center; padding: 6px 0; font-size: 12px; }
-.eb-summary-row { display: flex; gap: 10px; margin-bottom: 10px; }
-.eb-summary-label { width: 90px; color: var(--ink-soft); flex-shrink: 0; font-size: 11px; padding-top: 2px; }
-.eb-summary-value { flex: 1; font-size: 13px; }
-.eb-eval-card { border: 1px solid var(--hairline); background: var(--raised); margin-bottom: 12px; }
-.eb-eval-head { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.eb-eval-name { font-weight: 700; font-size: 14px; }
-.eb-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 7px; border: 1px solid var(--hairline); color: var(--ink-soft); }
-.eb-badge.code { border-color: var(--accent); color: var(--accent); }
-.eb-badge.judge { border-color: var(--ink-soft); }
-.eb-eval-body { padding: 0 18px 18px 18px; border-top: 1px solid var(--hairline); }
-.eb-rubric-row { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--hairline); font-size: 12px; }
-.eb-rubric-score { width: 26px; flex-shrink: 0; font-weight: 700; }
-.eb-bar-track { background: #fff; border: 1px solid var(--hairline); height: 10px; width: 100%; margin: 6px 0 14px 0; }
-.eb-bar-fill { background: var(--success); height: 100%; }
-.eb-result-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--hairline); font-size: 12px; }
-.eb-pass { color: var(--success); font-weight: 700; }
-.eb-fail-text { color: var(--fail); font-weight: 700; }
-.eb-empty { color: var(--ink-soft); font-size: 13px; padding: 30px 0; text-align: center; border: 1px dashed var(--hairline); }
-.eb-textlink { background: none; border: none; color: var(--accent); cursor: pointer; font-family: inherit; font-size: 12px; padding: 0; text-decoration: underline; }
-.eb-field-label-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.eb-hint-btn {
-  width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--hairline);
-  background: #fff; color: var(--ink-soft); font-size: 10px; line-height: 1;
-  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-  padding: 0; flex-shrink: 0;
-}
-.eb-hint-btn:hover { border-color: var(--accent); color: var(--accent); }
-.eb-hint-bubble {
-  background: var(--accent-soft); border-left: 2px solid var(--accent);
-  padding: 8px 10px; font-size: 11.5px; color: var(--ink); margin: -2px 0 10px 0;
-}
-.eb-help-note {
-  background: var(--raised); border: 1px dashed var(--hairline); border-left: 2px solid var(--accent);
-  padding: 10px 14px; font-size: 12px; color: var(--ink-soft); margin-bottom: 18px;
-}
-.eb-help-note strong { color: var(--ink); }
-.eb-modal-backdrop {
-  position: fixed; inset: 0; background: rgba(31,36,33,0.45); display: flex;
-  align-items: flex-start; justify-content: center; padding: 60px 20px; z-index: 50;
-}
-.eb-modal {
-  background: var(--paper); border: 1px solid var(--hairline); max-width: 560px; width: 100%;
-  max-height: 78vh; overflow-y: auto; padding: 24px;
-}
-.eb-modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.eb-modal-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink-soft); }
-.eb-modal-close:hover { color: var(--ink); }
-.eb-glossary-term { border-bottom: 1px solid var(--hairline); padding: 12px 0; }
-.eb-glossary-term:last-child { border-bottom: none; }
-.eb-glossary-term dt { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
-.eb-glossary-term dd { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
-.eb-export-row { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
-.eb-eval-actions { display: flex; gap: 6px; }
-`;
-
 // ---------- Product profile panel ----------
 function ProfilePanel({ profile, setProfile }) {
   return (
@@ -523,7 +354,7 @@ function FieldLabel({ text, hint }) {
   return (
     <div>
       <div className="eb-field-label-row">
-        <label className="eb-field-label" style={{ marginBottom: 0 }}>
+        <label className="eb-field-label eb-field-label--compact">
           {text}
         </label>
         {hint && (
@@ -562,12 +393,12 @@ function HelpModal({ onClose }) {
     <div className="eb-modal-backdrop" onClick={onClose}>
       <div className="eb-modal" onClick={(e) => e.stopPropagation()}>
         <div className="eb-modal-head">
-          <h3 className="eb-serif" style={{ margin: 0 }}>Guide</h3>
+          <h3 className="eb-serif eb-heading-reset">Guide</h3>
           <button className="eb-modal-close" onClick={onClose} aria-label="close guide">
             ×
           </button>
         </div>
-        <p className="eb-section-sub" style={{ marginBottom: 14 }}>
+        <p className="eb-section-sub eb-section-sub-tight">
           Short definitions for the concepts this tool is built around.
         </p>
         <dl>
@@ -656,31 +487,27 @@ function TracesTab({ traces, setTraces, taxonomy, setTaxonomy, onBuildFromTrace 
         <div className="eb-panel">
           <label className="eb-field-label">Title</label>
           <input
-            className="eb-input"
-            style={{ marginBottom: 10 }}
+            className="eb-input eb-mb-10"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             placeholder="Short label for this trace"
           />
           <label className="eb-field-label">User input</label>
           <textarea
-            className="eb-textarea"
-            style={{ marginBottom: 10 }}
+            className="eb-textarea eb-mb-10"
             value={form.userInput}
             onChange={(e) => setForm({ ...form, userInput: e.target.value })}
           />
           <label className="eb-field-label">Intent</label>
           <input
-            className="eb-input"
-            style={{ marginBottom: 10 }}
+            className="eb-input eb-mb-10"
             value={form.intent}
             onChange={(e) => setForm({ ...form, intent: e.target.value })}
             placeholder="e.g. billing_dispute"
           />
           <label className="eb-field-label">Agent response</label>
           <textarea
-            className="eb-textarea"
-            style={{ marginBottom: 14 }}
+            className="eb-textarea eb-mb-14"
             value={form.response}
             onChange={(e) => setForm({ ...form, response: e.target.value })}
           />
@@ -748,14 +575,13 @@ function TracesTab({ traces, setTraces, taxonomy, setTaxonomy, onBuildFromTrace 
                 ))}
             </select>
             <input
-              className="eb-input"
+              className="eb-input eb-max-160"
               placeholder="new tag name"
               value={newTagInputs[t.id] || ""}
               onChange={(e) => setNewTagInputs((prev) => ({ ...prev, [t.id]: e.target.value }))}
               onKeyDown={(e) => {
                 if (e.key === "Enter") addTag(t.id, newTagInputs[t.id] || "");
               }}
-              style={{ maxWidth: 160 }}
             />
             <button
               className="eb-btn-outline eb-btn-sm"
@@ -877,8 +703,7 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
           </HelpNote>
           <FieldLabel text="Eval name" hint="A short, specific label. You'll see this in the Library, so name it after the failure or behavior it checks, not the feature." />
           <input
-            className="eb-input"
-            style={{ marginBottom: 12 }}
+            className="eb-input eb-mb-12"
             value={draft.name}
             onChange={(e) => setDraft({ ...draft, name: e.target.value })}
             placeholder="e.g. Refund policy checked before billing response"
@@ -898,8 +723,7 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
             hint={'Example: "You are an expert customer service evaluator with 10+ years at enterprise software companies." This sets the lens quality gets judged through.'}
           />
           <textarea
-            className="eb-textarea"
-            style={{ marginBottom: 14 }}
+            className="eb-textarea eb-mb-14"
             value={draft.role}
             onChange={(e) => setDraft({ ...draft, role: e.target.value })}
           />
@@ -1043,15 +867,13 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
               {draft.labels.map((l, i) => (
                 <div className="eb-criterion-row" key={i}>
                   <input
-                    className="eb-input"
-                    style={{ maxWidth: 60 }}
+                    className="eb-input eb-max-60"
                     value={l.score}
                     onChange={(e) => updateLabel(i, "score", e.target.value)}
                     placeholder="3"
                   />
                   <input
-                    className="eb-input"
-                    style={{ maxWidth: 140 }}
+                    className="eb-input eb-max-140"
                     value={l.label}
                     onChange={(e) => updateLabel(i, "label", e.target.value)}
                     placeholder="Label"
@@ -1083,7 +905,7 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
             text="Scope — which traces does this eval apply to?"
             hint="Most evals should only run against the intent they were written for. Applying a billing-specific check to every trace usually just adds noise to your pass rate."
           />
-          <label style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
+          <label className="eb-field-scope">
             <input
               type="checkbox"
               checked={draft.scopeAll}
@@ -1250,7 +1072,7 @@ function LibraryTab({ evals, traces }) {
       </HelpNote>
 
       <div className="eb-export-row">
-        <span className="eb-trace-meta" style={{ alignSelf: "center", marginRight: 4 }}>
+        <span className="eb-trace-meta eb-trace-meta--align-center eb-mr-4">
           for developers:
         </span>
         <button
@@ -1318,7 +1140,7 @@ function LibraryTab({ evals, traces }) {
 
             {isOpen && (
               <div className="eb-eval-body">
-                <div className="eb-summary-row" style={{ marginTop: 14 }}>
+                <div className="eb-summary-row eb-mt-14">
                   <div className="eb-summary-label">Role</div>
                   <div className="eb-summary-value">{ev.role}</div>
                 </div>
@@ -1354,15 +1176,18 @@ function LibraryTab({ evals, traces }) {
                     </button>
 
                     {result && (
-                      <div style={{ marginTop: 14 }}>
+                      <div className="eb-mt-14">
                         <div className="eb-row-between">
                           <span className="eb-trace-meta">pass rate</span>
-                          <span style={{ fontWeight: 700 }}>{result.passRate}%</span>
+                          <span className="eb-pass-rate">{result.passRate}%</span>
                         </div>
                         <div className="eb-bar-track">
-                          <div className="eb-bar-fill" style={{ width: `${result.passRate}%` }} />
+                          <div
+                            className="eb-bar-fill"
+                            style={{ "--bar-width": `${result.passRate}%` }}
+                          />
                         </div>
-                        <div className="eb-row" style={{ marginBottom: 10 }}>
+                        <div className="eb-row eb-mb-10">
                           <button
                             className="eb-btn-outline eb-btn-sm"
                             onClick={() =>
@@ -1401,7 +1226,7 @@ function LibraryTab({ evals, traces }) {
                   </div>
                 ) : (
                   <div>
-                    <label className="eb-field-label" style={{ marginTop: 6 }}>
+                    <label className="eb-field-label eb-mt-6">
                       Labels
                     </label>
                     {ev.labels.map((l, i) => (
@@ -1413,13 +1238,12 @@ function LibraryTab({ evals, traces }) {
                       </div>
                     ))}
                     <button
-                      className="eb-btn-outline eb-btn-sm"
-                      style={{ marginTop: 12 }}
+                      className="eb-btn-outline eb-btn-sm eb-mt-12"
                       onClick={() => copyRubric(ev)}
                     >
                       {copiedId === ev.id ? "Copied" : "Copy rubric to clipboard"}
                     </button>
-                    <p className="eb-trace-meta" style={{ marginTop: 8 }}>
+                    <p className="eb-trace-meta eb-mt-8">
                       LLM-judge evals need calibration against human review before they run automatically — that workbench is next on the roadmap.
                     </p>
                   </div>
@@ -1472,7 +1296,6 @@ export default function App() {
 
   return (
     <div className="eb-app">
-      <style>{styles}</style>
       <div className="eb-topbar">
         <div className="eb-wordmark eb-serif">
           Eval<span>Builder</span>
