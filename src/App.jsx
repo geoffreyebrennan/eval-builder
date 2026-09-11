@@ -515,9 +515,13 @@ function ProjectsTab({
             className="eb-btn"
             onClick={() => {
               const trimmed = name.trim();
-              if (!trimmed) return;
-              onCreateProject(trimmed);
+              const createdProject = onCreateProject(trimmed || "Untitled project");
               setName("");
+
+              if (createdProject) {
+                setEditingProjectId(createdProject.id);
+                setEditingName(createdProject.name);
+              }
             }}
           >
             Create project
@@ -550,7 +554,13 @@ function ProjectsTab({
           ) : (
             <>
               <div>
-                <p className="eb-project-name">{project.name}</p>
+                <button
+                  type="button"
+                  className="eb-project-name-btn"
+                  onClick={() => beginRename(project)}
+                >
+                  {project.name}
+                </button>
                 <p className="eb-project-meta">
                   {project.traces.length} traces • {project.evals.length} evals • updated {new Date(project.updatedAt).toLocaleDateString()}
                 </p>
@@ -1526,10 +1536,11 @@ export default function App() {
   };
 
   const onCreateProject = (projectName) => {
-    const newProject = createProject(projectName.trim() || "My Project");
+    const newProject = createProject(projectName.trim() || "Untitled project");
     setProjects((prev) => [...prev, newProject]);
     setCurrentProjectId(newProject.id);
     setActiveTab("projects");
+    return newProject;
   };
 
   const onOpenProject = (projectId) => {
