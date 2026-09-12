@@ -1602,6 +1602,10 @@ export default function App() {
           <div className="eb-wordmark eb-serif">
             Eval<span>Builder</span>
           </div>
+          <div className="eb-current-project" aria-label={`Current project: ${currentProject.name}`}>
+            <span className="eb-current-project-label">Current project</span>
+            <span className="eb-current-project-name">{currentProject.name}</span>
+          </div>
         </div>
         <div className="eb-row">
           <button className="eb-profile-btn" onClick={() => setDarkMode((value) => !value)}>
