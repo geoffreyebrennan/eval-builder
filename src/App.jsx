@@ -325,6 +325,29 @@ const createProject = (name = "My Project") => ({
   updatedAt: Date.now(),
 });
 
+const makeUniqueProjectName = (candidate, projects, currentProjectId = null) => {
+  const trimmed = candidate.trim() || "Untitled project";
+  const existingNames = new Set(
+    projects
+      .filter((project) => project.id !== currentProjectId)
+      .map((project) => project.name.toLowerCase())
+  );
+
+  if (!existingNames.has(trimmed.toLowerCase())) {
+    return trimmed;
+  }
+
+  let suffix = 1;
+  let nextName = `${trimmed}-${suffix}`;
+
+  while (existingNames.has(nextName.toLowerCase())) {
+    suffix += 1;
+    nextName = `${trimmed}-${suffix}`;
+  }
+
+  return nextName;
+};
+
 const normalizeProject = (project, index) => ({
   id: project.id || uid(),
   name: project.name || `Project ${index + 1}`,
@@ -1536,7 +1559,8 @@ export default function App() {
   };
 
   const onCreateProject = (projectName) => {
-    const newProject = createProject(projectName.trim() || "Untitled project");
+    const uniqueName = makeUniqueProjectName(projectName, projects);
+    const newProject = createProject(uniqueName);
     setProjects((prev) => [...prev, newProject]);
     setCurrentProjectId(newProject.id);
     setActiveTab("projects");
@@ -1554,9 +1578,11 @@ export default function App() {
     const trimmed = nextName.trim();
     if (!trimmed || trimmed === project.name) return;
 
+    const uniqueName = makeUniqueProjectName(trimmed, projects, projectId);
+
     setProjects((prev) =>
       prev.map((item) =>
-        item.id === projectId ? { ...item, name: trimmed, updatedAt: Date.now() } : item
+        item.id === projectId ? { ...item, name: uniqueName, updatedAt: Date.now() } : item
       )
     );
   };
