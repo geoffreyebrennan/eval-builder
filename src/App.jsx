@@ -318,9 +318,9 @@ const createProject = (name = "My Project") => ({
   id: uid(),
   name,
   profile: cloneProjectData(seedProfile),
-  traces: cloneProjectData(seedTraces),
+  traces: [],
   taxonomy: cloneProjectData(seedTaxonomy),
-  evals: cloneProjectData(seedEvals),
+  evals: [],
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
@@ -329,9 +329,9 @@ const normalizeProject = (project, index) => ({
   id: project.id || uid(),
   name: project.name || `Project ${index + 1}`,
   profile: project.profile || cloneProjectData(seedProfile),
-  traces: Array.isArray(project.traces) ? project.traces : cloneProjectData(seedTraces),
+  traces: Array.isArray(project.traces) ? project.traces : [],
   taxonomy: Array.isArray(project.taxonomy) ? project.taxonomy : cloneProjectData(seedTaxonomy),
-  evals: Array.isArray(project.evals) ? project.evals : cloneProjectData(seedEvals),
+  evals: Array.isArray(project.evals) ? project.evals : [],
   createdAt: project.createdAt || Date.now(),
   updatedAt: project.updatedAt || Date.now(),
 });
@@ -1304,7 +1304,7 @@ function LibraryTab({ evals, traces }) {
                 >
                   CSV
                 </button>
-                <span className="eb-trace-meta">{isOpen ? "hide ▲" : "show ▼"}</span>
+                <span className="eb-trace-meta">{isOpen ? "Hide ▲" : "Show ▼"}</span>
               </div>
             </div>
 
