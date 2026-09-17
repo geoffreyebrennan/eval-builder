@@ -792,6 +792,10 @@ function TracesTab({ traces, setTraces, taxonomy, setTaxonomy, onBuildFromTrace 
 // ---------- Build Eval wizard ----------
 function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
   const [step, setStep] = useState(0);
+  const [agentQuestion, setAgentQuestion] = useState("");
+  const [agentResponse, setAgentResponse] = useState(
+    "I can turn a trace into a focused eval. I use the trace's tool calls, intent, and response to suggest the right check."
+  );
   const totalSteps = 6;
 
   useEffect(() => {
@@ -868,6 +872,77 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
     onSave(newEval);
   };
 
+  const selectedTrace = traces.find((trace) => trace.id === draft.sourceTraceId);
+
+  const applyAgentDraft = () => {
+    const trace = selectedTrace || traces.find((item) => item.failureTags.length > 0) || traces[0];
+    if (!trace) return;
+
+    const toolCall = trace.spans.find((span) => span.type === "tool_call");
+    const isObjective = Boolean(toolCall);
+    setDraft({
+      ...draft,
+      name: `${isObjective ? "Required" : "Quality check"}: ${trace.title}`,
+      sourceTraceId: trace.id,
+      goalCriteria: [
+        isObjective
+          ? `Agent uses ${toolCall.name} before producing the final response`
+          : `Response addresses the user's request without dismissive or unsupported claims`,
+      ],
+      typeChoice: isObjective ? "code" : "judge",
+      codeCheckType: isObjective ? "tool_call" : null,
+      codeCheckConfig: isObjective ? { toolName: toolCall.name } : {},
+      labels: isObjective
+        ? draft.labels
+        : [
+            { score: 3, label: "Pass", definition: "Directly answers the user with accurate, helpful guidance." },
+            { score: 1, label: "Fail", definition: "Misses the request, makes an unsupported claim, or sounds dismissive." },
+          ],
+      scopeAll: false,
+      scopeIntents: [trace.intent],
+    });
+    setAgentResponse(`I drafted an eval from “${trace.title}”. Review the suggested goal, then continue through the wizard.`);
+    setStep(0);
+  };
+
+  const chooseAgentType = (type) => {
+    const trace = selectedTrace;
+    const toolCall = trace?.spans.find((span) => span.type === "tool_call");
+    setDraft({
+      ...draft,
+      typeChoice: type,
+      codeCheckType: type === "code" ? "tool_call" : null,
+      codeCheckConfig: type === "code" && toolCall ? { toolName: toolCall.name } : {},
+      labels: type === "judge"
+        ? [
+            { score: 3, label: "Pass", definition: "Meets every criterion with a clear, grounded response." },
+            { score: 1, label: "Fail", definition: "Misses a criterion or gives an inaccurate or dismissive response." },
+          ]
+        : draft.labels,
+    });
+    setAgentResponse(type === "code"
+      ? "Code-based is a good fit when the trace exposes an exact signal, such as a required tool call."
+      : "LLM-as-judge is a good fit for tone, helpfulness, and other qualities that need a rubric.");
+    setStep(3);
+  };
+
+  const askAgent = (event) => {
+    event.preventDefault();
+    const question = agentQuestion.trim().toLowerCase();
+    if (!question) return;
+
+    if (question.includes("tone") || question.includes("helpful") || question.includes("quality") || question.includes("judge")) {
+      chooseAgentType("judge");
+      setAgentResponse("I switched this to an LLM-as-judge rubric because the request is subjective. The rubric starts with pass/fail labels; tighten the definitions before saving.");
+    } else if (question.includes("tool") || question.includes("rule") || question.includes("exact") || question.includes("lookup")) {
+      chooseAgentType("code");
+      setAgentResponse("I switched this to a code-based check. A tool call is the strongest exact signal in the selected trace; review the tool name before continuing.");
+    } else {
+      setAgentResponse("I can help shape the eval from the selected trace. Try asking for a tone judge, an exact rule, or use Draft from trace to fill the wizard in one pass.");
+    }
+    setAgentQuestion("");
+  };
+
   return (
     <div>
       <div className="eb-row-between">
@@ -878,6 +953,43 @@ function BuildEvalTab({ draft, setDraft, traces, onReset, onSave }) {
         <button className="eb-btn-outline" onClick={onReset}>
           Start blank
         </button>
+      </div>
+
+      <div className="eb-agent-panel">
+        <div className="eb-agent-header">
+          <div>
+            <div className="eb-agent-kicker">AI eval agent <span>workspace grounded</span></div>
+            <h3 className="eb-agent-title">Turn evidence into a sharper eval.</h3>
+          </div>
+          <div className="eb-agent-mark">✦</div>
+        </div>
+        <p className="eb-agent-response">{agentResponse}</p>
+        {selectedTrace && (
+          <div className="eb-agent-context">
+            <strong>Working from:</strong> {selectedTrace.title} · {selectedTrace.intent}
+          </div>
+        )}
+        <div className="eb-agent-actions">
+          <button className="eb-btn eb-btn-sm" onClick={applyAgentDraft} disabled={!traces.length}>
+            Draft from trace
+          </button>
+          <button className="eb-btn-outline eb-btn-sm" onClick={() => chooseAgentType("code")} disabled={!traces.length}>
+            Make it code-based
+          </button>
+          <button className="eb-btn-outline eb-btn-sm" onClick={() => chooseAgentType("judge")}>
+            Make it judge-based
+          </button>
+        </div>
+        <form className="eb-agent-form" onSubmit={askAgent}>
+          <input
+            className="eb-input"
+            value={agentQuestion}
+            onChange={(event) => setAgentQuestion(event.target.value)}
+            placeholder="Ask: should this check tone or a tool call?"
+            aria-label="Ask the AI eval agent"
+          />
+          <button className="eb-btn-outline eb-btn-sm" type="submit">Ask agent</button>
+        </form>
       </div>
 
       <div className="eb-step-track">

@@ -788,6 +788,84 @@
   color: var(--ink);
 }
 
+.eb-agent-panel {
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.eb-agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.eb-agent-kicker {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eb-agent-kicker span {
+  color: var(--ink-soft);
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-left: 6px;
+  text-transform: none;
+}
+
+.eb-agent-title {
+  font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 4px 0 0;
+}
+
+.eb-agent-mark {
+  color: var(--accent);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.eb-agent-response {
+  color: var(--ink);
+  font-size: 13px;
+  margin: 12px 0 10px;
+  max-width: 680px;
+}
+
+.eb-agent-context {
+  border-left: 2px solid var(--accent);
+  color: var(--ink-soft);
+  font-size: 11px;
+  margin: 0 0 12px;
+  padding-left: 9px;
+}
+
+.eb-agent-context strong {
+  color: var(--ink);
+}
+
+.eb-agent-actions,
+.eb-agent-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.eb-agent-form {
+  margin-top: 12px;
+}
+
+.eb-agent-form .eb-input {
+  flex: 1 1 260px;
+  background: var(--panel-contrast);
+}
+
 .eb-modal-backdrop {
   position: fixed;
   inset: 0;
